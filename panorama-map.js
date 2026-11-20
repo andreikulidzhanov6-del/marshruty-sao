@@ -35,7 +35,7 @@
     script.onload=()=>{const api=win.yardPanoramaApi;if(!api)return finish(new Error('Не удалось подключить Яндекс Панорамы.'));api.ready(()=>finish(null,api),e=>finish(e));};doc.head.append(script);
    });
    await init(api);
-  }catch(error){fail('Не удалось открыть панораму выбранного места. Нажмите «Повторить» или откройте Яндекс Карты.');}
+  }catch(error){win.console?.warn('[SAO panorama] '+String(error?.name||'Error')+': '+String(error?.message||error||'Unknown error').replace(/https?:\/\/\S+/g,'[url]').replace(/[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}/gi,'[redacted]'));fail('Не удалось открыть панораму выбранного места. Нажмите «Повторить» или откройте Яндекс Карты.');}
  }
  win.addEventListener('resize',()=>{if(!disposed)map?.container.fitToViewport();});
  win.addEventListener('pagehide',()=>{disposed=true;map?.destroy();});
