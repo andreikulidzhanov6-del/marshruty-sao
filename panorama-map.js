@@ -4,6 +4,8 @@
 })(typeof window==='object'?window:this,function({window:win,document:doc}){
  const point=(new URLSearchParams(win.location.search).get('point')||'').split(',').map(Number),valid=p=>Array.isArray(p)&&p.length>=2&&Number.isFinite(p[0])&&Number.isFinite(p[1])&&Math.abs(p[0])<=180&&Math.abs(p[1])<=90;
  let map=null,manager=null,disposed=false;
+ function safe(value){return String(value||'').replace(/([?&](?:apikey|key|token|signature|callback)=)[^&\s]+/gi,'$1[redacted]').replace(/[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}/gi,'[redacted]');}
+ win.addEventListener('error',event=>{const source=event.target?.src;if(source)win.console?.warn('[SAO resource] '+safe(source));},true);
  const $=id=>doc.getElementById(id);
  function send(type,extra={}){if(win.parent!==win)win.parent.postMessage({type:'yard-panorama-'+type,...extra},'*');}
  function fail(text){if(disposed)return;$('notice').textContent=text;$('fallback').hidden=false;send('error',{message:text});}
